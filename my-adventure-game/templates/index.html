@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hetansh's Magical Adventure</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+            background-color: #f0f8ff;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #ff4500;
+        }
+        p {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+        .choice-button {
+            background-color: #ffcc00;
+            font-size: 1.2em;
+            padding: 15px;
+            border: none;
+            margin: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        img {
+            width: 300px;
+            margin: 20px;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to Hetansh's Magical Adventure! 🌟</h1>
+    <p>{{ story['text'] }}</p>
+
+    <img src="/static/{{ story['image'] }}" alt="Adventure Image">
+
+    <!-- Add different sound effects -->
+    <audio id="meet-friends-sound">
+        <source src="/static/meet_friends.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="explore-castle-sound">
+        <source src="/static/explore_castle.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="play-lights-sound">
+        <source src="/static/play_lights.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="ride-carousel-sound">
+        <source src="/static/ride_carousel.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="find-treasure-sound">
+        <source src="/static/find_treasure.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="secret-adventure-sound">
+        <source src="/static/secret_adventure.mp3" type="audio/mpeg">
+    </audio>
+
+    <form method="POST" id="story-form">
+        {% for choice, next_step in story['choices'].items() %}
+            <button class="choice-button" type="button" name="choice" value="{{ next_step }}" onclick="handleClick('{{ next_step }}')">{{ choice }}</button>
+        {% endfor %}
+    </form>
+
+    {% if not story['choices'] %}
+        <p>The adventure ends here! Want to start over? <a href="/">Click here</a></p>
+    {% endif %}
+
+    <!-- JavaScript to play different sounds and delay form submission -->
+    <script>
+        function handleClick(step) {
+            // Map of step to sound IDs
+            var sounds = {
+                'meet_friends': 'meet-friends-sound',
+                'explore_castle': 'explore-castle-sound',
+                'play_lights': 'play-lights-sound',
+                'ride_carousel': 'ride-carousel-sound',
+                'find_treasure': 'find-treasure-sound',
+                'secret_adventure': 'secret-adventure-sound'
+            };
+
+            // Get the sound element by step
+            var soundId = sounds[step];
+            var sound = document.getElementById(soundId);
+
+            // Play the sound
+            if (sound) {
+                sound.play();
+            }
+
+            // Delay form submission to allow the sound to play
+            setTimeout(function() {
+                var form = document.getElementById("story-form");
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "choice";
+                input.value = step;
+                form.appendChild(input);
+                form.submit();
+            }, 1000);  // Delay of 1 second
+        }
+    </script>
+
+</body>
+</html>
